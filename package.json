@@ -1,0 +1,11 @@
+{
+  "name": "cybershield-ai",
+  "version": "1.0.0",
+  "description": "CyberShield AI - Enterprise Phishing & Scam Fraud Detection System with Relational SQL Database Architecture",
+  "main": "start_app.bat",
+  "scripts": {
+    "start": "start_app.bat",
+    "stop": "stop_app.bat",
+    "db:init": "node database/init_sql.js"
+  }
+}
