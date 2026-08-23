@@ -37,7 +37,7 @@ export default function AdminLoginPage({ onLoginSuccess }) {
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md glass-panel p-8 rounded-3xl border border-purple-500/40 shadow-2xl space-y-6 relative overflow-hidden">
-        
+
         {/* Glow Accent */}
         <div className="absolute -top-12 -right-12 w-32 h-32 bg-purple-500/20 rounded-full blur-2xl pointer-events-none"></div>
 
