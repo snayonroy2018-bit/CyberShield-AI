@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Shield, Zap, Search, Mail, MessageSquare, QrCode, PhoneCall, Image, Globe, Bot, Upload, Play, Download, CheckCircle, AlertTriangle, Cpu, CornerDownRight, RefreshCw, CreditCard, Languages } from 'lucide-react';
 import { api } from '../services/api';
+import { BrowserDatabase } from '../services/dbStore';
 import ScanResultModal from '../components/ScanResultModal';
 
 export default function ScanModulesPage({ user }) {
@@ -208,6 +209,7 @@ export default function ScanModulesPage({ user }) {
     } catch (err) {
       console.error('Scan API unavailable, using client AI engine:', err);
       const fallback = generateClientFallback(activeTab, inputVal);
+      BrowserDatabase.saveScan(fallback);
       setScanResult(fallback);
     } finally {
       setLoading(false);
