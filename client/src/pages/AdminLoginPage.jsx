@@ -68,6 +68,32 @@ export default function AdminLoginPage({ onLoginSuccess }) {
           </div>
         </div>
 
+        {/* Demo Admin Quick Fill Buttons */}
+        <div className="p-3.5 rounded-2xl bg-purple-950/40 border border-purple-500/30 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-mono text-purple-300 font-bold flex items-center space-x-1">
+              <Key className="w-3.5 h-3.5 text-purple-400" />
+              <span>⚡ DEMO ADMIN CREDENTIALS:</span>
+            </span>
+          </div>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => { setEmailOrUsername('admin'); setPassword('admin123'); setError(''); }}
+              className="flex-1 py-1.5 px-2 rounded-lg bg-purple-500/20 border border-purple-500/40 text-purple-200 text-xs font-mono font-semibold hover:bg-purple-500/35 transition-colors text-center"
+            >
+              Fill Admin (admin / admin123)
+            </button>
+            <button
+              type="button"
+              onClick={() => { setEmailOrUsername('Snayon Roy'); setPassword('Ritu@123'); setError(''); }}
+              className="flex-1 py-1.5 px-2 rounded-lg bg-indigo-500/20 border border-indigo-500/40 text-indigo-200 text-xs font-mono font-semibold hover:bg-indigo-500/35 transition-colors text-center"
+            >
+              Fill SysAdmin (Snayon Roy)
+            </button>
+          </div>
+        </div>
+
         {error && (
           <div className="p-3.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs flex items-center space-x-2.5">
             <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-400" />

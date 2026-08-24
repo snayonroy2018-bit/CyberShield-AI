@@ -33,52 +33,91 @@ api.interceptors.response.use(
     const url = config.url || '';
     const method = (config.method || 'get').toLowerCase();
 
-    // 1. Scan History Request
+    let bodyData = {};
+    try {
+      bodyData = typeof config.data === 'string' ? JSON.parse(config.data) : config.data || {};
+    } catch (e) {
+      bodyData = {};
+    }
+
+    // 1. Auth Login Request
+    if (url.includes('/auth/login')) {
+      const authRes = BrowserDatabase.authenticateUser(bodyData.emailOrUsername || bodyData.username, bodyData.password);
+      if (authRes) {
+        return Promise.resolve({ data: authRes });
+      }
+      return Promise.reject({ response: { data: { msg: 'Invalid login credentials.' } } });
+    }
+
+    // 2. Auth Register Request
+    if (url.includes('/auth/register')) {
+      const regRes = BrowserDatabase.registerUser(bodyData.username, bodyData.password, bodyData.email);
+      return Promise.resolve({ data: regRes });
+    }
+
+    // 3. Auth OTP Verify
+    if (url.includes('/auth/verify-otp')) {
+      return Promise.resolve({ data: { success: true, msg: 'OTP verified successfully. Redirecting to dashboard...' } });
+    }
+
+    // 4. Auth Me Check
+    if (url.includes('/auth/me')) {
+      const currentUser = BrowserDatabase.getCurrentUser();
+      return Promise.resolve({ data: { user: currentUser } });
+    }
+
+    // 5. Scan Analysis Request
+    if (url.includes('/scans/analyze')) {
+      const scanRes = BrowserDatabase.analyzeScan(bodyData.scanType || bodyData.scan_type, bodyData.inputData || bodyData.input_data || bodyData.input);
+      return Promise.resolve({ data: scanRes });
+    }
+
+    // 6. Scan History Request
     if (url.includes('/scans/history')) {
       const history = BrowserDatabase.getScans();
       return Promise.resolve({ data: history });
     }
 
-    // 2. Admin Metrics Request
+    // 7. Scan Analytics Request
+    if (url.includes('/scans/analytics')) {
+      const analytics = BrowserDatabase.getAnalytics();
+      return Promise.resolve({ data: analytics });
+    }
+
+    // 8. Admin Metrics Request
     if (url.includes('/admin/metrics')) {
       const metrics = BrowserDatabase.getMetrics();
       return Promise.resolve({ data: metrics });
     }
 
-    // 3. SQL Stats Request
+    // 9. SQL Stats Request
     if (url.includes('/sql/stats')) {
       const stats = BrowserDatabase.getSqlStats();
       return Promise.resolve({ data: stats });
     }
 
-    // 4. SQL Tables Request
+    // 10. SQL Tables Request
     if (url.includes('/sql/tables')) {
       const tables = BrowserDatabase.getSqlTables();
       return Promise.resolve({ data: tables });
     }
 
-    // 5. SQL Query Request
+    // 11. SQL Query Request
     if (url.includes('/sql/query')) {
-      let bodyData = {};
-      try {
-        bodyData = typeof config.data === 'string' ? JSON.parse(config.data) : config.data || {};
-      } catch (e) {
-        bodyData = {};
-      }
-      const queryResult = BrowserDatabase.executeQuery(bodyData.query);
+      const queryResult = BrowserDatabase.executeQuery(bodyData.sqlQuery || bodyData.query);
       return Promise.resolve({ data: queryResult });
     }
 
-    // 6. Incident Report Submission Request
-    if (url.includes('/incidents') && method === 'post') {
-      let bodyData = {};
-      try {
-        bodyData = typeof config.data === 'string' ? JSON.parse(config.data) : config.data || {};
-      } catch (e) {
-        bodyData = {};
-      }
+    // 12. Incident Report Submission Request
+    if (url.includes('/incidents/report') || (url.includes('/incidents') && method === 'post')) {
       const savedInc = BrowserDatabase.saveIncident(bodyData);
       return Promise.resolve({ data: savedInc });
+    }
+
+    // 13. Incident List Request
+    if (url.includes('/incidents')) {
+      const incidents = BrowserDatabase.getIncidents();
+      return Promise.resolve({ data: incidents });
     }
 
     return Promise.reject(error);

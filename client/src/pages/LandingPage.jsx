@@ -138,11 +138,33 @@ export default function LandingPage({ user, onLoginSuccess }) {
                   <span className="text-[11px] font-mono text-cyan-400 font-bold">⚡ DEMO USER:</span>
                   <button
                     type="button"
-                    onClick={() => { setUsername('demouser'); setPassword('user123'); }}
+                    onClick={() => { setUsername('demouser'); setPassword('user123'); setAuthError(''); }}
                     className="py-1 px-2.5 rounded bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-xs font-mono hover:bg-cyan-500/25 transition-colors"
                   >
                     Fill Demo User
                   </button>
+                </div>
+              )}
+
+              {authMode === 'admin' && (
+                <div className="p-2.5 rounded-xl bg-purple-950/40 border border-purple-500/30 space-y-1.5">
+                  <div className="text-[11px] font-mono text-purple-300 font-bold">⚡ DEMO ADMIN:</div>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => { setUsername('admin'); setPassword('admin123'); setAuthError(''); }}
+                      className="flex-1 py-1 px-2 rounded bg-purple-500/20 border border-purple-500/40 text-purple-200 text-xs font-mono hover:bg-purple-500/35 transition-colors text-center font-semibold"
+                    >
+                      Fill Admin (admin / admin123)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setUsername('Snayon Roy'); setPassword('Ritu@123'); setAuthError(''); }}
+                      className="flex-1 py-1 px-2 rounded bg-indigo-500/20 border border-indigo-500/40 text-indigo-200 text-xs font-mono hover:bg-indigo-500/35 transition-colors text-center font-semibold"
+                    >
+                      Fill SysAdmin (Snayon Roy)
+                    </button>
+                  </div>
                 </div>
               )}
 

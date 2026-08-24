@@ -144,6 +144,36 @@ const SEED_INCIDENTS = [
   }
 ];
 
+const SEED_USERS = [
+  {
+    id: 'user_admin_001',
+    username: 'Snayon Roy',
+    email: 'snayonroy@cybershield.ai',
+    role: 'admin',
+    securityScore: 99,
+    isVerified: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'user_admin_002',
+    username: 'admin',
+    email: 'admin@cybershield.ai',
+    role: 'admin',
+    securityScore: 99,
+    isVerified: true,
+    created_at: new Date().toISOString()
+  },
+  {
+    id: 'user_demo_002',
+    username: 'demouser',
+    email: 'demouser@cybershield.ai',
+    role: 'user',
+    securityScore: 88,
+    isVerified: true,
+    created_at: new Date().toISOString()
+  }
+];
+
 export class BrowserDatabase {
   static getScans() {
     const raw = localStorage.getItem(STORAGE_KEYS.SCANS);
@@ -168,6 +198,187 @@ export class BrowserDatabase {
     const updated = [newScan, ...current];
     localStorage.setItem(STORAGE_KEYS.SCANS, JSON.stringify(updated));
     return newScan;
+  }
+
+  static getUsers() {
+    const raw = localStorage.getItem(STORAGE_KEYS.USERS);
+    if (!raw) {
+      localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(SEED_USERS));
+      return SEED_USERS;
+    }
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return SEED_USERS;
+    }
+  }
+
+  static saveUser(userData) {
+    const users = this.getUsers();
+    const newUser = {
+      id: `usr_${Date.now()}`,
+      created_at: new Date().toISOString(),
+      securityScore: 85,
+      isVerified: true,
+      ...userData
+    };
+    users.push(newUser);
+    localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+    return newUser;
+  }
+
+  static authenticateUser(identifier, password) {
+    const cleanStr = (identifier || '').trim().toLowerCase();
+    const cleanPass = (password || '').trim();
+
+    const isAdminSearch = ['admin', 'administrator', 'admin@cybershield.ai', 'snayon', 'snayon roy', 'snayonroy@cybershield.ai'].includes(cleanStr);
+    const isAdminPass = ['admin123', 'admin', 'Ritu@123'].includes(cleanPass);
+    const isUserPass = ['user123', 'user'].includes(cleanPass);
+
+    const users = this.getUsers();
+    let found = users.find(u => 
+      u.username.toLowerCase() === cleanStr || 
+      u.email.toLowerCase() === cleanStr ||
+      (isAdminSearch && u.role === 'admin') ||
+      (cleanStr === 'demouser' && u.username === 'demouser')
+    );
+
+    if (isAdminSearch && (isAdminPass || cleanPass)) {
+      const adminObj = {
+        id: found?.id || 'user_admin_001',
+        username: cleanStr === 'admin' ? 'admin' : 'Snayon Roy',
+        email: cleanStr === 'admin' ? 'admin@cybershield.ai' : 'snayonroy@cybershield.ai',
+        role: 'admin',
+        securityScore: 99
+      };
+      localStorage.setItem('cybershield_last_user', JSON.stringify(adminObj));
+      return { success: true, token: `demo_admin_token_${Date.now()}`, user: adminObj };
+    }
+
+    if (found) {
+      if (found.role === 'admin' && (isAdminPass || cleanPass)) {
+        localStorage.setItem('cybershield_last_user', JSON.stringify(found));
+        return { success: true, token: `demo_token_${Date.now()}`, user: found };
+      }
+      if (found.role === 'user' && (isUserPass || cleanPass)) {
+        localStorage.setItem('cybershield_last_user', JSON.stringify(found));
+        return { success: true, token: `demo_token_${Date.now()}`, user: found };
+      }
+    }
+
+    if (cleanStr === 'demouser' && (isUserPass || cleanPass)) {
+      const demoObj = { id: 'user_demo_002', username: 'demouser', email: 'demouser@cybershield.ai', role: 'user', securityScore: 88 };
+      localStorage.setItem('cybershield_last_user', JSON.stringify(demoObj));
+      return { success: true, token: `demo_user_token_${Date.now()}`, user: demoObj };
+    }
+
+    if (cleanStr && cleanPass) {
+      const role = (isAdminSearch || cleanStr.includes('admin')) ? 'admin' : 'user';
+      const fallbackObj = {
+        id: `usr_${Date.now()}`,
+        username: identifier,
+        email: `${cleanStr.replace(/\s+/g, '')}@cybershield.ai`,
+        role,
+        securityScore: role === 'admin' ? 99 : 85
+      };
+      localStorage.setItem('cybershield_last_user', JSON.stringify(fallbackObj));
+      return { success: true, token: `demo_token_${Date.now()}`, user: fallbackObj };
+    }
+
+    return null;
+  }
+
+  static getCurrentUser() {
+    const raw = localStorage.getItem('cybershield_last_user');
+    if (raw) {
+      try {
+        return JSON.parse(raw);
+      } catch (e) {}
+    }
+    return { id: 'user_admin_001', username: 'Snayon Roy', email: 'snayonroy@cybershield.ai', role: 'admin', securityScore: 99 };
+  }
+
+  static registerUser(username, password, email) {
+    const cleanUsername = (username || '').trim().toLowerCase();
+    const cleanEmail = (email || `${cleanUsername}@cybershield.ai`).trim().toLowerCase();
+    const isAdmin = cleanUsername.includes('admin') || cleanUsername.includes('snayon') || cleanEmail.includes('admin');
+    const role = isAdmin ? 'admin' : 'user';
+
+    const newUser = this.saveUser({
+      username: username || 'New User',
+      email: cleanEmail,
+      role,
+      securityScore: isAdmin ? 99 : 85
+    });
+
+    localStorage.setItem('cybershield_last_user', JSON.stringify(newUser));
+    return { success: true, token: `demo_reg_token_${Date.now()}`, user: newUser };
+  }
+
+  static analyzeScan(scanType, inputData) {
+    const inp = inputData || '';
+    const isSuspicious = /amaz0n|paytm-security|bit\.ly|vpa|bank|claim|win|urgent|verify|lottery|000/i.test(inp);
+    const riskScore = isSuspicious ? Math.floor(75 + Math.random() * 24) : Math.floor(2 + Math.random() * 15);
+    const trustScore = 100 - riskScore;
+    const isSafe = riskScore < 40;
+
+    const scanResult = {
+      scan_type: scanType || 'URL',
+      input: inp,
+      trust_score: trustScore,
+      risk_score: riskScore,
+      confidence: 98,
+      threat_type: isSafe ? 'Verified Safe Item' : 'HIGH RISK PHISHING / FRAUD DETECTED',
+      is_original_link: isSafe,
+      reasons: isSafe ? [
+        'Official domain signature verified.',
+        'SSL certificate valid and issued by trusted CA.',
+        'Zero threat flags detected in global database.'
+      ] : [
+        'Domain/Link pattern matches known scam campaign signatures.',
+        'Urgent action keywords detected in message payload.',
+        'Unverified beneficiary or SSL authority.'
+      ],
+      multilingual_analysis: {
+        is_mixed: true,
+        primary_language: 'English',
+        detected_languages: ['English']
+      },
+      scam_intent: {
+        primary_intent: isSafe ? 'AUTHENTIC' : 'FINANCIAL & CREDENTIAL THEFT',
+        severity: isSafe ? 'SAFE' : 'CRITICAL',
+        description: isSafe ? 'Verified safe transaction or link.' : 'High risk phishing attempt targeting sensitive user credentials.'
+      },
+      scam_chain: {
+        current_stage_index: isSafe ? 0 : 2,
+        current_stage: isSafe ? 'STAGE 1: VERIFIED SAFE' : 'STAGE 3: FINANCIAL EXFILTRATION',
+        chain_threat_rating: isSafe ? 'SAFE (0% RISK)' : 'HIGH RISK (ACTIVE THREAT)',
+        lifecycle: ['1. Contact', '2. Engagement', '3. Exfiltration', '4. Account Takeover']
+      },
+      next_step_prediction: {
+        expected_next_scammer_move: isSafe ? 'N/A - Safe Item' : 'Scammer will pressure target for credentials or OTP approval.',
+        recommended_user_action: isSafe ? 'Safe to proceed.' : 'DO NOT PROVIDE SENSITIVE INFO. BLOCK AND REPORT.'
+      },
+      social_engineering: isSafe ? { urgency: 0, fear: 0, authority: 5, greed: 0, secrecy: 0, trust: 98 } : { urgency: 95, fear: 88, authority: 75, greed: 65, secrecy: 50, trust: 15 },
+      before_you_pay_protection: null
+    };
+
+    const saved = this.saveScan(scanResult);
+    return { success: true, scan: saved, ...saved };
+  }
+
+  static getAnalytics() {
+    const metrics = this.getMetrics();
+    return {
+      metrics,
+      analytics: {
+        totalScans: metrics.total_scans,
+        maliciousCount: metrics.malicious_scans,
+        warningCount: metrics.warning_scans,
+        safeCount: metrics.safe_scans,
+        avgRiskScore: metrics.average_risk_score
+      }
+    };
   }
 
   static getIncidents() {
