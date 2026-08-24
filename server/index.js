@@ -48,8 +48,13 @@ app.use((req, res, next) => {
 });
 
 // MongoDB Connection Attempt with graceful fallback
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('✅ MongoDB database connected successfully.'))
+mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 5000 })
+  .then(async () => {
+    console.log('✅ MongoDB database connected successfully.');
+    if (typeof authController.seedMongoUsers === 'function') {
+      await authController.seedMongoUsers();
+    }
+  })
   .catch((err) => console.log('⚠️ MongoDB not connected (running in Relational SQL + In-Memory fallback mode).'));
 
 // API Routes

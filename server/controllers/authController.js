@@ -325,3 +325,45 @@ exports.getStoredUserLogs = async () => {
   return inMemoryUserLogs;
 };
 
+// Seed default users into MongoDB when database connects
+exports.seedMongoUsers = async () => {
+  try {
+    const adminExists = await User.findOne({ role: 'admin' });
+    if (!adminExists) {
+      const pass1 = await bcrypt.hash('Ritu@123', 10);
+      const pass2 = await bcrypt.hash('admin123', 10);
+      const pass3 = await bcrypt.hash('user123', 10);
+
+      await User.insertMany([
+        {
+          username: 'Snayon Roy',
+          email: 'snayonroy@cybershield.ai',
+          password: pass1,
+          role: 'admin',
+          securityScore: 99,
+          isVerified: true
+        },
+        {
+          username: 'admin',
+          email: 'admin@cybershield.ai',
+          password: pass2,
+          role: 'admin',
+          securityScore: 99,
+          isVerified: true
+        },
+        {
+          username: 'demouser',
+          email: 'demouser@cybershield.ai',
+          password: pass3,
+          role: 'user',
+          securityScore: 88,
+          isVerified: true
+        }
+      ]);
+      console.log('🌱 MongoDB default seed users initialized successfully.');
+    }
+  } catch (e) {
+    // Ignore seed errors if users already exist
+  }
+};
+
