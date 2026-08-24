@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>CyberShield AI Redirecting...</title>
+    <script>
+      // Single Page Apps for GitHub Pages
+      // Redirect direct URLs (e.g. /CyberShield-AI/login) to Hash Router URL (e.g. /CyberShield-AI/#/login)
+      (function() {
+        var pathName = window.location.pathname;
+        var repoName = '/CyberShield-AI/';
+        var route = pathName.replace(repoName, '');
+        if (route && route.startsWith('/')) route = route.slice(1);
+        var targetUrl = window.location.origin + repoName + '#/' + (route || '') + window.location.search;
+        window.location.replace(targetUrl);
+      })();
+    </script>
+  </head>
+  <body style="background:#090d16;color:#38bdf8;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;">
+    <h2>Redirecting to CyberShield AI Portal...</h2>
+  </body>
+</html>
