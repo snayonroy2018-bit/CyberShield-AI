@@ -35,10 +35,9 @@ function getDbInstance() {
         console.error('❌ Failed to open SQLite Database:', err.message);
       } else {
         console.log(`✅ SQLite Database connected successfully: ${DB_PATH}`);
+        db.run('PRAGMA foreign_keys = ON;');
       }
     });
-    // Enable Foreign Keys in SQLite
-    db.run('PRAGMA foreign_keys = ON;');
   }
   return db;
 }

@@ -6,7 +6,8 @@
 -- 1. Insert Initial System Users
 INSERT OR REPLACE INTO users (id, username, email, password_hash, otp, is_verified, security_score, role, last_login_at, login_count, created_at)
 VALUES 
-('user_admin_001', 'Snayon Roy', 'snayonroy@cybershield.ai', '$2a$10$wT5W2E59l6OqJ7yFm23uJ.Xm4xH3Yp/1R7B3xS6N90P1Q2R3S4T5U', NULL, 1, 99, 'admin', CURRENT_TIMESTAMP, 14, CURRENT_TIMESTAMP),
+('user_admin_001', 'Snayon Roy', 'snayonroy2018@gmail.com', '$2a$10$wT5W2E59l6OqJ7yFm23uJ.Xm4xH3Yp/1R7B3xS6N90P1Q2R3S4T5U', NULL, 1, 99, 'admin', CURRENT_TIMESTAMP, 14, CURRENT_TIMESTAMP),
+('user_admin_002', 'admin', 'admin@cybershield.ai', '$2a$10$adminHash123456789012345678901234567890', NULL, 1, 99, 'admin', CURRENT_TIMESTAMP, 10, CURRENT_TIMESTAMP),
 ('user_demo_002', 'demouser', 'demouser@cybershield.ai', '$2a$10$vP6V1D48k5NpI6xE12tI.Wl3wG2Xo/0Q6A2xR5M89O0P1Q2R3S4T', NULL, 1, 88, 'user', CURRENT_TIMESTAMP, 8, CURRENT_TIMESTAMP),
 ('user_analyst_003', 'alex_cyber', 'alex.analyst@cybershield.ai', '$2a$10$uO5U0C37j4MoH5xD01sH.Vk2vF1Xn/9P5z1wQ4L78N9O0P1Q2R3S', NULL, 1, 95, 'admin', CURRENT_TIMESTAMP, 5, CURRENT_TIMESTAMP);
 

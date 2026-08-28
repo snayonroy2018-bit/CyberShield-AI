@@ -10,3 +10,16 @@ services:
         value: 5000
       - key: NODE_ENV
         value: production
+      - key: PYTHON_AI_URL
+        value: https://cybershield-ai-engine.onrender.com
+
+  - type: web
+    name: cybershield-ai-engine
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt || pip install fastapi uvicorn scikit-learn numpy pillow requests pydantic
+    startCommand: python python-ai/app.py
+    envVars:
+      - key: PORT
+        value: 8000
+

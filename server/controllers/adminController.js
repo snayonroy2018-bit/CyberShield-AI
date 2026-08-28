@@ -9,8 +9,10 @@ exports.getAdminMetrics = async (req, res) => {
     const users = await getStoredUsers();
     const userLogs = await getStoredUserLogs();
 
+    const activeAdminName = req.user?.username || 'System Administrator';
+
     res.json({
-      adminName: 'Snayon Roy',
+      adminName: activeAdminName,
       systemHealth: '100% Operational',
       aiEngineStatus: 'Active (FastAPI NLP + Scikit-Learn Pipeline)',
       totalRegisteredUsers: users.length,
@@ -21,7 +23,7 @@ exports.getAdminMetrics = async (req, res) => {
       registeredUsers: users,
       userLogs: userLogs,
       systemLogs: [
-        { id: 1, type: 'SECURITY', message: 'Admin Snayon Roy authenticated successfully', time: 'Just now' },
+        { id: 1, type: 'SECURITY', message: `Admin ${activeAdminName} authenticated successfully`, time: 'Just now' },
         { id: 2, type: 'ALERT', message: 'High risk phishing campaign detected (amaz0n-secure-login.xyz)', time: '10 mins ago' },
         { id: 3, type: 'INFO', message: 'Threat Intelligence Blacklist feeds updated successfully', time: '45 mins ago' },
         { id: 4, type: 'SUCCESS', message: 'Python NLP Model weights auto-calibrated', time: '2 hours ago' }

@@ -59,9 +59,9 @@ export default function ScanHistoryPage({ user }) {
       </div>
 
       {loading ? (
-        <div className="text-center py-12 font-mono text-cyan-400">Loading scan history log...</div>
+        <div className="text-center py-12 font-mono text-cyan-400 animate-pulse">Loading scan history log...</div>
       ) : (
-        <div className="glass-panel rounded-3xl border border-cyan-500/20 overflow-hidden shadow-2xl">
+        <div className="glass-panel rounded-3xl border border-cyan-500/20 overflow-hidden shadow-2xl card-3d-tilt">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-slate-300">
               <thead className="bg-slate-900/90 text-xs font-mono text-cyan-400 uppercase border-b border-slate-800">
@@ -91,12 +91,12 @@ export default function ScanHistoryPage({ user }) {
                       {item.input}
                     </td>
                     <td className="py-4 px-6">
-                      <span className={`px-3 py-1 rounded text-[11px] font-bold ${item.riskScore > 70 ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'}`}>
+                      <span className={`px-3 py-1 rounded text-[11px] font-bold ${(item.riskScore || item.risk_score || 0) > 70 ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'}`}>
                         {item.threatType || item.threat_type}
                       </span>
                     </td>
                     <td className="py-4 px-6 font-bold text-base">
-                      <span className={item.riskScore > 70 ? 'text-red-400' : 'text-emerald-400'}>
+                      <span className={(item.riskScore || item.risk_score || 0) > 70 ? 'text-red-400' : 'text-emerald-400'}>
                         {item.riskScore || item.risk_score}%
                       </span>
                     </td>

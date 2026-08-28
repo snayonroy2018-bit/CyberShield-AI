@@ -6,7 +6,7 @@ import axios from 'axios';
 import { io } from 'socket.io-client';
 import { BrowserDatabase } from './dbStore';
 
-const API_BASE_URL = '/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 // Create Axios Instance
 export const api = axios.create({
@@ -68,7 +68,10 @@ api.interceptors.response.use(
 
     // 5. Scan Analysis Request
     if (url.includes('/scans/analyze')) {
-      const scanRes = BrowserDatabase.analyzeScan(bodyData.scanType || bodyData.scan_type, bodyData.inputData || bodyData.input_data || bodyData.input);
+      const scanRes = BrowserDatabase.analyzeScan(
+        bodyData.type || bodyData.scanType || bodyData.scan_type,
+        bodyData.input || bodyData.inputData || bodyData.input_data
+      );
       return Promise.resolve({ data: scanRes });
     }
 

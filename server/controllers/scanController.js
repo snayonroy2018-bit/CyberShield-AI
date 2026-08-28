@@ -215,11 +215,26 @@ exports.getAnalytics = async (req, res) => {
       safe: safeScans
     },
     threatCategories: [
-      { name: 'Phishing URLs', count: allScans.filter(s => (s.scanType || s.scan_type) === 'URL Scanner').length },
-      { name: 'Email Scam', count: allScans.filter(s => (s.scanType || s.scan_type) === 'Email Scanner').length },
-      { name: 'Lottery SMS', count: allScans.filter(s => (s.scanType || s.scan_type) === 'SMS Scanner').length },
-      { name: 'Fake QR Codes', count: allScans.filter(s => (s.scanType || s.scan_type) === 'QR Scanner').length },
-      { name: 'Voice Fraud', count: allScans.filter(s => (s.scanType || s.scan_type) === 'Voice Scanner').length }
+      { name: 'Phishing URLs', count: allScans.filter(s => {
+        const t = (s.scanType || s.scan_type || '').toLowerCase();
+        return t === 'url scanner' || t === 'url' || t === 'domain';
+      }).length },
+      { name: 'Email Scam', count: allScans.filter(s => {
+        const t = (s.scanType || s.scan_type || '').toLowerCase();
+        return t === 'email scanner' || t === 'email';
+      }).length },
+      { name: 'Lottery SMS', count: allScans.filter(s => {
+        const t = (s.scanType || s.scan_type || '').toLowerCase();
+        return t === 'sms scanner' || t === 'sms';
+      }).length },
+      { name: 'Fake QR Codes', count: allScans.filter(s => {
+        const t = (s.scanType || s.scan_type || '').toLowerCase();
+        return t === 'qr scanner' || t === 'qr' || t === 'qr code scanner';
+      }).length },
+      { name: 'Voice Fraud', count: allScans.filter(s => {
+        const t = (s.scanType || s.scan_type || '').toLowerCase();
+        return t === 'voice scanner' || t === 'voice' || t === 'voice scam detection';
+      }).length }
     ],
     riskTrend: [
       { month: 'Jan', scans: Math.round(totalScans * 0.15), threats: Math.round(threatsDetected * 0.15) },

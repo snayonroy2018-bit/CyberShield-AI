@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import LiveThreatAlerts from './components/LiveThreatAlerts';
 import CyberGuardChatbot from './components/CyberGuardChatbot';
+import CyberMatrixBackground from './components/CyberMatrixBackground';
 
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
@@ -16,6 +17,7 @@ import IncidentReportPage from './pages/IncidentReportPage';
 import LearningHubPage from './pages/LearningHubPage';
 import AdminPanelPage from './pages/AdminPanelPage';
 import AdminLoginPage from './pages/AdminLoginPage';
+import LiveShieldPage from './pages/LiveShieldPage';
 import { api } from './services/api';
 
 export default function App() {
@@ -73,7 +75,10 @@ export default function App() {
 
   return (
     <Router>
-      <div className="min-h-screen flex flex-col justify-between bg-[#090d16] text-slate-100">
+      <div className="min-h-screen flex flex-col justify-between bg-[#060913] text-slate-100 relative overflow-hidden cyber-scanlines">
+        
+        {/* Animated Cyber Matrix Canvas Background */}
+        <CyberMatrixBackground />
         
         {/* Navigation Header */}
         <Navbar user={user} onLogout={handleLogout} />
@@ -93,11 +98,12 @@ export default function App() {
             {/* Auth & Admin Login Routes */}
             <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <LoginPage onLoginSuccess={handleLoginSuccess} />} />
             <Route path="/register" element={user ? <Navigate to="/dashboard" replace /> : <RegisterPage onLoginSuccess={handleLoginSuccess} />} />
-            <Route path="/otp-verify" element={<OTPVerificationPage onLoginSuccess={handleLoginSuccess} />} />
+            <Route path="/otp-verify" element={<Navigate to="/login" replace />} />
             <Route path="/admin-portal" element={user?.role === 'admin' ? <Navigate to="/admin" replace /> : <AdminLoginPage onLoginSuccess={handleLoginSuccess} />} />
             <Route path="/admin-login" element={user?.role === 'admin' ? <Navigate to="/admin" replace /> : <AdminLoginPage onLoginSuccess={handleLoginSuccess} />} />
 
             {/* Protected Feature Routes (Require Login/Register First) */}
+            <Route path="/live-shield" element={<ProtectedRoute><LiveShieldPage user={user} /></ProtectedRoute>} />
             <Route path="/dashboard" element={<ProtectedRoute><DashboardPage user={user} /></ProtectedRoute>} />
             <Route path="/scanners" element={<ProtectedRoute><ScanModulesPage user={user} /></ProtectedRoute>} />
             <Route path="/history" element={<ProtectedRoute><ScanHistoryPage user={user} /></ProtectedRoute>} />

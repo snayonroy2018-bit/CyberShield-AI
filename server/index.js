@@ -61,7 +61,9 @@ mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 5000 })
 // Auth Routes
 app.post('/api/auth/register', authController.register);
 app.post('/api/auth/login', authController.login);
+app.post('/api/auth/send-otp', authController.sendOTP);
 app.post('/api/auth/verify-otp', authController.verifyOTP);
+app.post('/api/auth/resend-otp', authController.resendOTP);
 app.post('/api/auth/forgot-password', authController.forgotPassword);
 app.get('/api/auth/me', authMiddleware, authController.getMe);
 

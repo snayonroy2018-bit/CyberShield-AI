@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Shield, Lock, User, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Shield, Lock, User, CheckCircle2, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { api } from '../services/api';
 
 export default function LoginPage({ onLoginSuccess }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [emailOrUsername, setEmailOrUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [infoMsg, setInfoMsg] = useState(location.state?.msg || '');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,109 +39,126 @@ export default function LoginPage({ onLoginSuccess }) {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md glass-panel p-8 rounded-3xl border border-cyan-500/30 shadow-2xl space-y-6">
+    <div className="min-h-[85vh] flex flex-col items-center justify-center px-4 py-8">
+      
+      {/* Top Header Tagline */}
+      <div className="text-center mb-6">
+        <h1 className="text-xl sm:text-2xl font-medium tracking-wide text-slate-200">Explainable AI.</h1>
+      </div>
+
+      {/* Auth Card Matching Screenshot */}
+      <div className="w-full max-w-lg bg-[#0b1320]/95 backdrop-blur-xl p-8 sm:p-10 rounded-[2rem] border border-cyan-500/25 shadow-[0_0_50px_rgba(0,240,255,0.08)] space-y-7">
         
-        {/* Header */}
-        <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 shadow-neon mx-auto flex items-center justify-center">
-            <Shield className="w-7 h-7 text-black stroke-[2.5]" />
-          </div>
-          <h2 className="text-2xl font-extrabold text-slate-100">CyberShield User Sign In</h2>
-          <p className="text-xs text-slate-400 font-mono">AUTHENTICATE TO ACCESS AI THREAT SUITE</p>
+        {/* Title & Subtitle */}
+        <div className="text-center space-y-1.5">
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">Sign In User</h2>
+          <p className="text-xs text-slate-400 font-mono tracking-widest uppercase">AUTHENTICATE TO ACCESS AI SUITE</p>
         </div>
 
-        {/* Portal Mode Switcher */}
-        <div className="flex rounded-xl bg-slate-900/90 border border-slate-800 p-1">
-          <div className="flex-1 py-2 px-3 rounded-lg text-xs font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 flex items-center justify-center space-x-1.5 shadow-sm">
-            <User className="w-3.5 h-3.5 text-cyan-400" />
-            <span>User Sign In</span>
-          </div>
+        {/* 3-Tab Bar Switcher */}
+        <div className="flex rounded-2xl bg-[#060b14] border border-slate-800 p-1.5 justify-between">
+          <Link
+            to="/register"
+            className="flex-1 py-2.5 px-3 rounded-xl text-xs font-mono font-medium text-slate-400 hover:text-cyan-300 flex items-center justify-center transition-colors"
+          >
+            <span>Register</span>
+          </Link>
+          <Link
+            to="/login"
+            className="flex-1 py-2.5 px-3 rounded-xl text-xs font-mono font-bold bg-[#092236] text-cyan-300 border border-cyan-500/40 shadow-neon flex items-center justify-center space-x-1"
+          >
+            <span>Sign In</span>
+          </Link>
           <Link
             to="/admin-portal"
-            className="flex-1 py-2 px-3 rounded-lg text-xs font-mono font-medium text-slate-400 hover:text-purple-300 hover:bg-purple-500/10 flex items-center justify-center space-x-1.5 transition-colors"
+            className="flex-1 py-2.5 px-3 rounded-xl text-xs font-mono font-medium text-slate-400 hover:text-purple-300 flex items-center justify-center transition-colors"
           >
-            <Lock className="w-3.5 h-3.5 text-purple-400" />
             <span>Admin Portal</span>
           </Link>
         </div>
 
-        {/* Demo User Fill Button */}
-        <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
-          <span className="text-[11px] font-mono text-cyan-400 font-bold">⚡ DEMO USER:</span>
+        {/* Quick Demo Fill Helper */}
+        <div className="p-3 rounded-xl bg-[#060c17] border border-slate-800 flex items-center justify-between">
+          <span className="text-[11px] font-mono text-cyan-400 font-bold">⚡ QUICK DEMO CREDENTIALS:</span>
           <button
             type="button"
             onClick={loadDemoUser}
-            className="py-1 px-3 rounded bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-xs font-mono hover:bg-cyan-500/25 transition-colors"
+            className="py-1 px-3 rounded-lg bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-xs font-mono hover:bg-cyan-500/25 transition-colors cursor-pointer"
           >
             Fill Demo User
           </button>
         </div>
 
+        {infoMsg && (
+          <div className="p-3.5 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-xs font-mono text-center flex items-center justify-center space-x-2">
+            <CheckCircle2 className="w-4 h-4 text-cyan-400 flex-shrink-0" />
+            <span>{infoMsg}</span>
+          </div>
+        )}
+
         {error && (
-          <div className="p-3 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs flex items-center space-x-2">
-            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+          <div className="p-3.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs font-mono text-center flex items-center justify-center space-x-2">
+            <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-xs font-mono text-slate-300 uppercase tracking-wider mb-1.5">
-              Username
+            <label className="block text-xs font-mono text-slate-300 uppercase tracking-wider mb-2">
+              USERNAME OR EMAIL
             </label>
             <div className="relative">
-              <User className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
+              <User className="absolute left-4 top-3.5 w-4 h-4 text-slate-500" />
               <input
                 type="text"
                 required
                 value={emailOrUsername}
                 onChange={(e) => setEmailOrUsername(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:border-cyan-500 outline-none font-mono"
-                placeholder="Enter username"
+                className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-[#060c17] border border-slate-800 text-slate-100 text-sm focus:border-cyan-500 outline-none font-mono transition-colors"
+                placeholder="Enter username or email"
               />
             </div>
           </div>
 
           <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-xs font-mono text-slate-300 uppercase tracking-wider">
-                Password
-              </label>
-            </div>
+            <label className="block text-xs font-mono text-slate-300 uppercase tracking-wider mb-2">
+              PASSWORD
+            </label>
             <div className="relative">
-              <Lock className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
+              <Lock className="absolute left-4 top-3.5 w-4 h-4 text-slate-500" />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 text-sm focus:border-cyan-500 outline-none font-mono"
+                className="w-full pl-11 pr-11 py-3.5 rounded-2xl bg-[#060c17] border border-slate-800 text-slate-100 text-sm focus:border-cyan-500 outline-none font-mono transition-colors"
                 placeholder="••••••••"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-3.5 text-slate-500 hover:text-cyan-400 transition-colors cursor-pointer"
+                title={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-bold text-sm tracking-wide shadow-neon hover:scale-[1.02] transition-transform flex items-center justify-center space-x-2"
+            className="w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500 text-black font-extrabold text-base shadow-[0_0_25px_rgba(0,240,255,0.4)] hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center space-x-2 border border-cyan-300/30 cursor-pointer"
           >
             {loading ? <span>Authenticating...</span> : (
               <>
                 <span>Sign In To Dashboard</span>
-                <ArrowRight className="w-4 h-4" />
+                <CheckCircle2 className="w-5 h-5 stroke-[2.5]" />
               </>
             )}
           </button>
         </form>
-
-        <div className="text-center pt-2 text-xs text-slate-400">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-cyan-400 font-semibold hover:underline">
-            Register Here
-          </Link>
-        </div>
 
       </div>
     </div>

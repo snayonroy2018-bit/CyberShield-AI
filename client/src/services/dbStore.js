@@ -246,8 +246,8 @@ export class BrowserDatabase {
     if (isAdminSearch && (isAdminPass || cleanPass)) {
       const adminObj = {
         id: found?.id || 'user_admin_001',
-        username: cleanStr === 'admin' ? 'admin' : 'Snayon Roy',
-        email: cleanStr === 'admin' ? 'admin@cybershield.ai' : 'snayonroy@cybershield.ai',
+        username: identifier || found?.username || 'admin',
+        email: found?.email || `${cleanStr}@cybershield.ai`,
         role: 'admin',
         securityScore: 99
       };
@@ -295,7 +295,7 @@ export class BrowserDatabase {
         return JSON.parse(raw);
       } catch (e) {}
     }
-    return { id: 'user_admin_001', username: 'Snayon Roy', email: 'snayonroy@cybershield.ai', role: 'admin', securityScore: 99 };
+    return { id: 'user_admin_002', username: 'admin', email: 'admin@cybershield.ai', role: 'admin', securityScore: 99 };
   }
 
   static registerUser(username, password, email) {

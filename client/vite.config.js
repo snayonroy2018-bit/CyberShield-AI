@@ -2,7 +2,6 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  base: '/CyberShield-AI/',
   plugins: [react()],
   server: {
     port: 3000,
@@ -12,5 +11,20 @@ export default defineConfig({
         changeOrigin: true
       }
     }
+  },
+  build: {
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          charting: ['chart.js', 'react-chartjs-2'],
+          icons: ['lucide-react'],
+          pdf: ['jspdf', 'jspdf-autotable'],
+          fileProcessing: ['jsqr', 'tesseract.js']
+        }
+      }
+    }
   }
 });
+

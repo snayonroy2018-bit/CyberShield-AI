@@ -143,9 +143,9 @@ export default function IncidentReportPage({ user }) {
         <button
           type="button"
           onClick={() => handleModeChange('original')}
-          className={`flex items-center justify-center space-x-2 py-3 px-4 rounded-xl font-mono text-xs font-bold transition-all ${
+          className={`flex items-center justify-center space-x-2 py-3 px-4 rounded-xl font-mono text-xs font-bold transition-all card-3d-purple cursor-pointer ${
             reportMode === 'original'
-              ? 'bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-neon border border-red-400'
+              ? 'bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-neon border border-red-400 scale-105'
               : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
           }`}
         >
@@ -156,9 +156,9 @@ export default function IncidentReportPage({ user }) {
         <button
           type="button"
           onClick={() => handleModeChange('demo')}
-          className={`flex items-center justify-center space-x-2 py-3 px-4 rounded-xl font-mono text-xs font-bold transition-all ${
+          className={`flex items-center justify-center space-x-2 py-3 px-4 rounded-xl font-mono text-xs font-bold transition-all card-3d-tilt cursor-pointer ${
             reportMode === 'demo'
-              ? 'bg-gradient-to-r from-amber-500 to-yellow-600 text-black shadow-neon border border-amber-300'
+              ? 'bg-gradient-to-r from-amber-500 to-yellow-600 text-black shadow-neon border border-amber-300 scale-105'
               : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
           }`}
         >

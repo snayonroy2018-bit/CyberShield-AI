@@ -84,7 +84,7 @@ export default function LearningHubPage() {
       </div>
 
       {/* Interactive Quiz Section */}
-      <div className="max-w-3xl mx-auto glass-panel p-8 rounded-3xl border border-cyan-500/30 space-y-6 shadow-2xl">
+      <div className="max-w-3xl mx-auto glass-panel p-8 rounded-3xl border border-cyan-500/30 space-y-6 shadow-2xl card-3d-tilt">
         
         <div className="flex items-center justify-between border-b border-slate-800 pb-4 font-mono text-xs text-cyan-400">
           <span>INTERACTIVE PHISHING QUIZ</span>
@@ -103,7 +103,7 @@ export default function LearningHubPage() {
             </p>
             <button
               onClick={resetQuiz}
-              className="px-8 py-3 rounded-xl bg-cyan-500 text-black font-bold text-sm shadow-neon"
+              className="px-8 py-3 rounded-xl bg-cyan-500 text-black font-bold text-sm shadow-neon cursor-pointer hover:scale-105 transition-transform"
             >
               Retake Cyber Quiz
             </button>
@@ -128,7 +128,7 @@ export default function LearningHubPage() {
                   <button
                     key={idx}
                     onClick={() => handleSelectOption(idx)}
-                    className={`w-full p-4 rounded-xl border text-left text-sm font-mono transition-all ${btnStyle}`}
+                    className={`w-full p-4 rounded-xl border text-left text-sm font-mono transition-all card-3d-tilt cursor-pointer ${btnStyle}`}
                   >
                     {opt}
                   </button>
@@ -143,7 +143,7 @@ export default function LearningHubPage() {
                 <div className="pt-2 flex justify-end">
                   <button
                     onClick={handleNextQuestion}
-                    className="px-6 py-2 rounded-lg bg-cyan-500 text-black font-bold text-xs shadow-neon"
+                    className="px-6 py-2 rounded-lg bg-cyan-500 text-black font-bold text-xs shadow-neon cursor-pointer hover:scale-105 transition-transform"
                   >
                     Next Question →
                   </button>
@@ -162,21 +162,21 @@ export default function LearningHubPage() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-2">
+          <div className="glass-panel p-6 rounded-2xl border border-cyan-500/30 space-y-2 card-3d-tilt cursor-pointer">
             <h4 className="font-bold text-cyan-400 font-mono">Phishing URLs</h4>
             <p className="text-xs text-slate-400 leading-relaxed">
               Spoofed domain names designed to visually mimic banking or e-commerce login portals to harvest credentials.
             </p>
           </div>
 
-          <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-2">
+          <div className="glass-panel p-6 rounded-2xl border border-purple-500/30 space-y-2 card-3d-purple cursor-pointer">
             <h4 className="font-bold text-purple-400 font-mono">Lottery & Reward Traps</h4>
             <p className="text-xs text-slate-400 leading-relaxed">
               Unsolicited prize claims asking victims to pay "processing fees" or enter banking details via shortened bit.ly URLs.
             </p>
           </div>
 
-          <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-2">
+          <div className="glass-panel p-6 rounded-2xl border border-emerald-500/30 space-y-2 card-3d-emerald cursor-pointer">
             <h4 className="font-bold text-red-400 font-mono">Vishing (Voice Fraud)</h4>
             <p className="text-xs text-slate-400 leading-relaxed">
               Phone scams impersonating police, Aadhaar authorities, or bank staff coercing callers into revealing One-Time Passwords.

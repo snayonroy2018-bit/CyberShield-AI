@@ -17,6 +17,7 @@ import {
 import { api } from '../services/api';
 import { generatePDFReport } from '../utils/pdfGenerator';
 import ScanResultModal from '../components/ScanResultModal';
+import HeartbeatTelemetryModal from '../components/HeartbeatTelemetryModal';
 
 ChartJS.register(
   CategoryScale,
@@ -34,6 +35,7 @@ export default function DashboardPage({ user }) {
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedScan, setSelectedScan] = useState(null);
+  const [telemetryModal, setTelemetryModal] = useState(null);
   
   // Time period filter: 'hourly', 'today', 'yesterday', 'monthly'
   const [timeView, setTimeView] = useState('today');
@@ -277,7 +279,7 @@ export default function DashboardPage({ user }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           
           {/* Metric Card 1: Total Scans Executed */}
-          <div className="glass-panel p-6 rounded-2xl border border-cyan-500/30 space-y-3 relative overflow-hidden shadow-lg hover:border-cyan-400 transition-colors">
+          <div className="glass-panel p-6 rounded-2xl border border-cyan-500/30 space-y-3 relative overflow-hidden shadow-lg card-3d-tilt cursor-pointer">
             <div className="flex items-center justify-between">
               <span className="text-xs font-mono uppercase tracking-wider text-slate-300 font-bold">
                 Total Scans Executed
@@ -297,7 +299,7 @@ export default function DashboardPage({ user }) {
           </div>
 
           {/* Metric Card 2: Threats Blocked */}
-          <div className="glass-panel p-6 rounded-2xl border border-red-500/30 space-y-3 relative overflow-hidden shadow-lg hover:border-red-400 transition-colors">
+          <div className="glass-panel p-6 rounded-2xl border border-red-500/30 space-y-3 relative overflow-hidden shadow-lg card-3d-purple cursor-pointer">
             <div className="flex items-center justify-between">
               <span className="text-xs font-mono uppercase tracking-wider text-red-400 font-bold">
                 Threats Neutralized
@@ -316,7 +318,7 @@ export default function DashboardPage({ user }) {
           </div>
 
           {/* Metric Card 3: Today's Scans */}
-          <div className="glass-panel p-6 rounded-2xl border border-amber-500/30 space-y-3 relative overflow-hidden shadow-lg hover:border-amber-400 transition-colors">
+          <div className="glass-panel p-6 rounded-2xl border border-amber-500/30 space-y-3 relative overflow-hidden shadow-lg card-3d-tilt cursor-pointer">
             <div className="flex items-center justify-between">
               <span className="text-xs font-mono uppercase tracking-wider text-amber-400 font-bold">
                 Today's Scans
@@ -335,23 +337,87 @@ export default function DashboardPage({ user }) {
           </div>
 
           {/* Metric Card 4: Security Hygiene Score */}
-          <div className="glass-panel p-6 rounded-2xl border border-emerald-500/30 space-y-3 relative overflow-hidden shadow-lg hover:border-emerald-400 transition-colors">
+          <div className="glass-panel p-6 rounded-2xl border border-emerald-500/30 space-y-3 relative overflow-hidden shadow-lg card-3d-emerald cursor-pointer">
             <div className="flex items-center justify-between">
               <span className="text-xs font-mono uppercase tracking-wider text-emerald-400 font-bold">
-                Security Score
+                Security Hygiene Score
               </span>
               <CheckCircle className="w-4 h-4 text-emerald-400" />
             </div>
             <div className="flex items-baseline space-x-2">
               <div className="text-3xl font-extrabold text-emerald-400 font-mono">
-                {realHygieneScore} / 100
+                {realHygieneScore}%
               </div>
+              <span className="text-xs text-emerald-300 font-mono">Optimal</span>
             </div>
             <p className="text-[11px] text-emerald-300 font-mono border-t border-slate-800/80 pt-2">
-              Optimal Cyber Hygiene
+              Verified Shield Health
             </p>
           </div>
 
+        </div>
+      </div>
+
+      {/* DASHBOARD SPECIAL CYBER EFFECT: LIVE SECURITY HEARTBEAT WAVEFORM HUD */}
+      <div className="glass-panel p-6 rounded-3xl border border-cyan-500/30 hover:border-cyan-400/60 shadow-[0_0_35px_rgba(0,240,255,0.12)] space-y-4 font-mono relative overflow-hidden transition-all duration-300">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-cyan-500/20 pb-3 gap-2">
+          <div 
+            onClick={() => setTelemetryModal('main')}
+            className="flex items-center space-x-2 text-cyan-400 text-xs font-bold uppercase tracking-widest cursor-pointer hover:text-cyan-300 hover:underline group"
+          >
+            <Activity className="w-4 h-4 text-cyan-400 animate-pulse group-hover:scale-110 transition-transform" />
+            <span>LIVE THREAT MATRIX HEARTBEAT TELEMETRY</span>
+            <span className="text-[9px] px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-normal border border-cyan-500/30 no-underline">⚡ OPEN PORTAL</span>
+          </div>
+          <button
+            onClick={() => setTelemetryModal('neural')}
+            className="text-[11px] px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center space-x-1 hover:bg-emerald-500/30 hover:scale-105 transition-all cursor-pointer font-bold w-fit"
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            <span>AI NEURAL ENGINE ONLINE 🔍</span>
+          </button>
+        </div>
+
+        {/* Heartbeat ECG / Pulse Waveform Animation Visual (Clickable) */}
+        <div 
+          onClick={() => setTelemetryModal('main')}
+          className="relative h-20 bg-[#030712] rounded-2xl border border-slate-800 hover:border-cyan-500/50 overflow-hidden flex items-center px-4 cursor-pointer group transition-all"
+        >
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,240,255,0.15),transparent)]" />
+          
+          {/* Animated Waveform SVG Line */}
+          <svg className="w-full h-12 text-cyan-400 group-hover:text-cyan-300 transition-colors" viewBox="0 0 500 50" fill="none" preserveAspectRatio="none">
+            <path
+              d="M0,25 L100,25 L120,5 L140,45 L160,15 L180,35 L200,25 L300,25 L320,0 L340,50 L360,25 L500,25"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeDasharray="600"
+              strokeDashoffset="600"
+              className="animate-[dash_3s_linear_infinite]"
+            />
+          </svg>
+
+          {/* Floating Interactive Data Pulse Badges */}
+          <div className="absolute right-4 sm:right-6 top-3 flex flex-wrap items-center gap-2 text-[11px]">
+            <button 
+              onClick={(e) => { e.stopPropagation(); setTelemetryModal('frequency'); }}
+              className="text-cyan-300 font-bold px-2 py-0.5 rounded bg-cyan-500/10 border border-cyan-500/30 hover:bg-cyan-500/20 hover:scale-105 transition-all cursor-pointer"
+            >
+              FREQUENCY: 60Hz 🔍
+            </button>
+            <button 
+              onClick={(e) => { e.stopPropagation(); setTelemetryModal('encryption'); }}
+              className="text-purple-300 font-bold px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/30 hover:bg-purple-500/20 hover:scale-105 transition-all cursor-pointer"
+            >
+              ENCRYPTION: AES-256 🔍
+            </button>
+            <button 
+              onClick={(e) => { e.stopPropagation(); setTelemetryModal('buffer'); }}
+              className="text-emerald-300 font-bold px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 hover:bg-emerald-500/20 hover:scale-105 transition-all cursor-pointer"
+            >
+              BUFFER: 0 DROPPED 🔍
+            </button>
+          </div>
         </div>
       </div>
 
@@ -482,12 +548,12 @@ export default function DashboardPage({ user }) {
                       {scan.input}
                     </td>
                     <td className="py-3.5 px-4">
-                      <span className={`px-2.5 py-1 rounded text-[11px] font-bold ${scan.riskScore > 70 ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'}`}>
+                      <span className={`px-2.5 py-1 rounded text-[11px] font-bold ${(scan.riskScore || scan.risk_score || 0) > 70 ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'}`}>
                         {scan.threatType || scan.threat_type}
                       </span>
                     </td>
                     <td className="py-3.5 px-4 font-bold">
-                      <span className={scan.riskScore > 70 ? 'text-red-400' : 'text-emerald-400'}>
+                      <span className={(scan.riskScore || scan.risk_score || 0) > 70 ? 'text-red-400' : 'text-emerald-400'}>
                         {scan.riskScore || scan.risk_score}%
                       </span>
                     </td>
@@ -518,6 +584,14 @@ export default function DashboardPage({ user }) {
           scanResult={selectedScan}
           onClose={() => setSelectedScan(null)}
           user={user}
+        />
+      )}
+
+      {/* Interactive Heartbeat Telemetry Portal Modal */}
+      {telemetryModal && (
+        <HeartbeatTelemetryModal
+          activeSubView={telemetryModal}
+          onClose={() => setTelemetryModal(null)}
         />
       )}
 

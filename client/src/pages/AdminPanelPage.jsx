@@ -35,6 +35,34 @@ export default function AdminPanelPage({ user }) {
     }
   }, [user]);
 
+  if (!user || user.role !== 'admin') {
+    return (
+      <div className="min-h-[70vh] flex flex-col items-center justify-center p-8 text-center space-y-6">
+        <div className="w-16 h-16 rounded-2xl bg-red-500/20 border border-red-500/40 text-red-400 flex items-center justify-center animate-pulse shadow-neon">
+          <Lock className="w-8 h-8" />
+        </div>
+        <div className="space-y-2 max-w-lg">
+          <h2 className="text-2xl font-extrabold text-slate-100">🚫 Access Denied: Administrator Privileges Required</h2>
+          <p className="text-sm text-slate-400 font-mono">
+            The Admin Portal is restricted strictly to authorized system administrators (<span className="text-cyan-400 font-bold">snayonroy2018@gmail.com</span>). Regular users cannot access this control room.
+          </p>
+        </div>
+        <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs font-mono text-slate-300 space-y-2 max-w-md">
+          <p className="text-amber-400 font-bold">MANDATORY ENTRY SEQUENCE:</p>
+          <p>1. Register Account <span className="text-cyan-400">→</span> 2. Verify Real Email OTP <span className="text-cyan-400">→</span> 3. Sign In</p>
+        </div>
+        <div className="flex space-x-3">
+          <Link to="/register" className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-bold text-xs font-mono hover:scale-105 transition-transform">
+            1. Go to Register
+          </Link>
+          <Link to="/login" className="px-5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 font-mono text-xs hover:border-cyan-500/50 transition-colors">
+            2. Go to Sign In
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   const fetchMetrics = async () => {
     setLoading(true);
     setError(null);
@@ -131,9 +159,9 @@ export default function AdminPanelPage({ user }) {
             <span>ADMINISTRATOR CONTROL OPERATIONS CENTER</span>
           </div>
           <h1 className="text-3xl font-extrabold text-slate-100 mt-1 flex items-center space-x-3">
-            <span>Welcome, {metrics?.adminName || user?.username || 'Snayon Roy'}</span>
+            <span>Welcome, {user?.username || metrics?.adminName || 'System Administrator'}</span>
             <span className="px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 text-xs font-mono border border-purple-500/40">
-              Super Admin
+              Admin Access
             </span>
           </h1>
         </div>
@@ -162,7 +190,7 @@ export default function AdminPanelPage({ user }) {
           
           {/* Top Key Performance Indicators */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="glass-panel p-6 rounded-2xl border border-purple-500/20 space-y-2">
+            <div className="glass-panel p-6 rounded-2xl border border-purple-500/20 space-y-2 card-3d-emerald cursor-pointer">
               <span className="text-xs font-mono text-slate-400 uppercase">System Status</span>
               <div className="text-xl font-bold text-emerald-400 font-mono flex items-center space-x-2">
                 <CheckCircle className="w-5 h-5" />
@@ -170,7 +198,7 @@ export default function AdminPanelPage({ user }) {
               </div>
             </div>
 
-            <div className="glass-panel p-6 rounded-2xl border border-purple-500/20 space-y-2">
+            <div className="glass-panel p-6 rounded-2xl border border-purple-500/20 space-y-2 card-3d-purple cursor-pointer">
               <span className="text-xs font-mono text-slate-400 uppercase">Registered Portal Users</span>
               <div className="text-2xl font-extrabold text-purple-400 font-mono flex items-center space-x-2">
                 <Users className="w-5 h-5 text-purple-400" />
@@ -178,7 +206,7 @@ export default function AdminPanelPage({ user }) {
               </div>
             </div>
 
-            <div className="glass-panel p-6 rounded-2xl border border-purple-500/20 space-y-2">
+            <div className="glass-panel p-6 rounded-2xl border border-purple-500/20 space-y-2 card-3d-tilt cursor-pointer">
               <span className="text-xs font-mono text-slate-400 uppercase">SQL Relational Engine</span>
               <div className="text-xl font-extrabold text-cyan-400 font-mono flex items-center space-x-2">
                 <Database className="w-5 h-5 text-cyan-400" />
@@ -186,7 +214,7 @@ export default function AdminPanelPage({ user }) {
               </div>
             </div>
 
-            <div className="glass-panel p-6 rounded-2xl border border-purple-500/20 space-y-2">
+            <div className="glass-panel p-6 rounded-2xl border border-purple-500/20 space-y-2 card-3d-tilt cursor-pointer">
               <span className="text-xs font-mono text-slate-400 uppercase">Total SQL DB Scans</span>
               <div className="text-2xl font-extrabold text-amber-400 font-mono">
                 {sqlStats?.counts?.scans || metrics?.activeThreatFeeds || 10}
