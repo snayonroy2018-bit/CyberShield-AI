@@ -188,3 +188,82 @@
 .animate-float-3d {
   animation: float-slow 4s ease-in-out infinite;
 }
+
+/* Laser Scanner Beam Line Effect */
+@keyframes laser-sweep {
+  0% { top: 0%; opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { top: 100%; opacity: 0.2; }
+}
+
+.animate-laser-sweep {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00f0ff, #a855f7, #00f0ff, transparent);
+  box-shadow: 0 0 15px #00f0ff, 0 0 30px #a855f7;
+  animation: laser-sweep 2.5s ease-in-out infinite alternate;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Animated Gradient Text Shimmer */
+@keyframes text-gradient-move {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.text-shimmer-cyber {
+  background: linear-gradient(135deg, #00f0ff 0%, #38bdf8 25%, #a855f7 50%, #38bdf8 75%, #00f0ff 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-gradient-move 4s ease infinite;
+}
+
+/* Pulsing Neon Ring Badge */
+@keyframes neon-ring-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.7); }
+  70% { box-shadow: 0 0 0 12px rgba(0, 240, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); }
+}
+
+.animate-neon-ring {
+  animation: neon-ring-pulse 2s infinite;
+}
+
+/* Cyber Shimmer Overlay for Cards */
+.cyber-shimmer-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.cyber-shimmer-card::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 30%,
+    rgba(0, 240, 255, 0.08) 50%,
+    transparent 70%
+  );
+  transform: rotate(30deg);
+  transition: transform 0.8s ease;
+  pointer-events: none;
+}
+
+.cyber-shimmer-card:hover::after {
+  transform: translate(50%, 50%) rotate(30deg);
+}
+
+/* Large Neon Glow Shadow */
+.shadow-neon-lg {
+  box-shadow: 0 0 35px rgba(0, 240, 255, 0.35), 0 0 15px rgba(168, 85, 247, 0.25);
+}
+
